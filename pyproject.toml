@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "web-image-optimiser"
+name = "web-image-optimizer"
 version = "0.1.0"
 description = "CLI tool for reducing image size (JPEG/PNG) with resizing, compression, and parallel processing."
 authors = ["Your Name <you@example.com>"]
