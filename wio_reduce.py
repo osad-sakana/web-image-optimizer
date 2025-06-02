@@ -80,13 +80,20 @@ def process_image(file, args):
     # 1ファイルの画像圧縮・リサイズ処理
     file = Path(file)
     ext = file.suffix.lower()
+    # バックアップ（Image.open前に実施）
+    if args.backup:
+        bak_path = file.with_name(f"{file.name}.bak")
+        try:
+            if not bak_path.exists():
+                shutil.copy2(file, bak_path)
+            if not bak_path.exists():
+                raise IOError(f"バックアップファイルの作成に失敗しました: {bak_path}")
+        except Exception as e:
+            with print_lock:
+                print(f"[ERROR] {file}: BackupError - {e}")
+            raise
     orig_img = Image.open(file)
     orig_w, orig_h = orig_img.size
-    # バックアップ
-    if args.backup:
-        bak_path = file.with_suffix(file.suffix + ".bak")
-        if not bak_path.exists():
-            shutil.copy2(file, bak_path)
     # リサイズ処理
     img = orig_img.copy()
     if args.width or args.height:

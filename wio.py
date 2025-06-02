@@ -4,7 +4,7 @@ import argparse
 def main():
     parser = argparse.ArgumentParser(
         prog="wio", description="Web Image Optimizer CLI Tool")
-    subparsers = parser.add_subparsers(dest="command", required=True)
+    subparsers = parser.add_subparsers(dest="command", required=False)
 
     reduce_parser = subparsers.add_parser(
         "reduce",
@@ -23,11 +23,19 @@ def main():
     reduce_parser.add_argument(
         "-r", "--recursive", action="store_true", help="Process directories recursively.")
     reduce_parser.add_argument(
-        "--backup", action="store_true", help="Backup original files before processing.")
+        "--nobackup", action="store_true", help="Do not backup original files before processing.")
     reduce_parser.add_argument(
         "--parallel", action="store_true", help="Enable parallel processing.")
 
     args = parser.parse_args()
+
+    # サブコマンド未指定や引数なしの場合はヘルプを表示
+    if args.command is None:
+        parser.print_help()
+        exit(0)
+
+    # デフォルトはバックアップ有効、--nobackup指定時のみ無効
+    args.backup = not args.nobackup
 
     if args.command == "reduce":
         from wio_reduce import reduce_main
