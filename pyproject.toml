@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "web-image-optimiser"
+version = "0.1.0"
+description = "CLI tool for reducing image size (JPEG/PNG) with resizing, compression, and parallel processing."
+authors = ["Your Name <you@example.com>"]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.8,<4.0"
+Pillow = "*"
+tqdm = "*"
+
+[tool.poetry.scripts]
+wio = "wio:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api" 
