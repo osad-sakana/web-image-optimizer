@@ -26,6 +26,8 @@ def main():
         "--nobackup", action="store_true", help="Do not backup original files before processing.")
     reduce_parser.add_argument(
         "--parallel", action="store_true", help="Enable parallel processing.")
+    reduce_parser.add_argument(
+        "--webp", action="store_true", help="Convert images to WebP format.")
 
     args = parser.parse_args()
 

@@ -100,6 +100,25 @@ def process_image(file, args):
         max_w = args.width if args.width else orig_w
         max_h = args.height if args.height else orig_h
         img.thumbnail((max_w, max_h), Image.LANCZOS)
+
+    # WebP変換処理
+    if getattr(args, 'webp', False):
+        webp_path = file.with_suffix('.webp')
+        quality = args.quality if hasattr(args, 'quality') else 85
+        img.save(webp_path, format='WEBP', quality=quality, optimize=True)
+        new_size = webp_path.stat().st_size / 1024
+        msg = (
+            f"[OK] {file} → {webp_path} {new_size:.1f}KB "
+            f"(quality={quality}, resize={orig_w}x{orig_h}→{img.width}x{img.height})"
+        )
+        with print_lock:
+            print(msg)
+        return {
+            'size': new_size,
+            'quality': quality,
+            'resize': (orig_w, orig_h, img.width, img.height),
+            'output': str(webp_path)
+        }
     # JPEG処理
     if ext in {'.jpg', '.jpeg'}:
         quality = args.quality
