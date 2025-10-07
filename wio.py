@@ -11,9 +11,9 @@ def main():
         help="Reduce image file size with resizing and compression."
     )
     reduce_parser.add_argument(
-        "--path", required=True, help="Target file or directory path.")
+        "path", help="Target file or directory path.")
     reduce_parser.add_argument(
-        "--size", required=True, type=int, help="Target file size in KB.")
+        "--size", type=int, help="Target file size in KB.")
     reduce_parser.add_argument(
         "--width", type=int, help="Max width of output image (px).")
     reduce_parser.add_argument(
@@ -27,7 +27,7 @@ def main():
     reduce_parser.add_argument(
         "--parallel", action="store_true", help="Enable parallel processing.")
     reduce_parser.add_argument(
-        "--webp", action="store_true", help="Convert images to WebP format.")
+        "--no-webp", action="store_true", help="Disable WebP conversion (WebP is default).")
 
     args = parser.parse_args()
 
@@ -38,6 +38,9 @@ def main():
 
     # デフォルトはバックアップ有効、--nobackup指定時のみ無効
     args.backup = not args.nobackup
+
+    # デフォルトはWebP有効、--no-webp指定時のみ無効
+    args.webp = not args.no_webp
 
     if args.command == "reduce":
         from wio_reduce import reduce_main
