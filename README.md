@@ -13,65 +13,82 @@
 - 進捗バー表示
 - デフォルトで元画像を `.bak` でバックアップ
 - PNGはpngquantによる追加圧縮もサポート
-- WebP変換対応（`--webp`）
+- デフォルトでWebP変換（`--no-webp`で無効化可能）
 
 ## インストール
 
-1. 依存パッケージのインストール
+### uvのインストール
 
-   ```sh
-   uv sync
-   ```
+```sh
+# macOS / Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-2. 必要に応じて `pngquant` をインストール（PNG圧縮強化用）
+# macOS (Homebrew)
+brew install uv
+```
 
-   - macOS: `brew install pngquant`
-   - Ubuntu: `sudo apt install pngquant`
+### wioコマンドのインストール
+
+```sh
+uv tool install git+https://github.com/sabato/web-image-optimizer.git
+```
+
+これで `wio` コマンドがどこからでも使えるようになります。
+
+### アンインストール
+
+```sh
+uv tool uninstall web-image-optimizer
+```
+
+### オプション: pngquantのインストール（PNG圧縮強化用）
+
+- macOS: `brew install pngquant`
+- Ubuntu: `sudo apt install pngquant`
 
 ## 使い方
 
 ### 基本コマンド
 
 ```sh
-uv run wio reduce --path <ファイルまたはディレクトリ> --size <目標KB>
+wio <ファイルまたはディレクトリ>
 ```
 
 ### 主なオプション
 
-- `--path <パス>`: 対象ファイルまたはディレクトリ（必須）
-- `--size <KB>`: 目標ファイルサイズ（KB単位, 必須）
-- `--width <px>`: 最大幅
+- `--size <KB>`: 目標ファイルサイズ（KB単位、デフォルト: 100）
+- `--width <px>`: 最大幅（デフォルト: 1200）
 - `--height <px>`: 最大高さ
-- `--quality <1-100>`: JPEG/WebP画質（デフォルト85）
+- `--quality <1-100>`: JPEG/WebP画質（デフォルト: 85）
 - `-r, --recursive`: ディレクトリを再帰的に処理
 - `--parallel`: 並列処理で高速化
-- `--nobackup`: バックアップを作成しない（デフォルトは常に `.bak` を作成）
-- `--webp`: 画像をWebP形式に変換して保存
+- `--nobackup`: バックアップを作成しない（デフォルトは `.bak` を作成）
+- `--no-webp`: WebP変換を無効化（デフォルトはWebP変換有効）
 
 ### 例
 
 #### 画像1枚を100KB以下、幅800pxにリサイズ
 
 ```sh
-uv run wio reduce --path path/to/image.jpg --size 100 --width 800
+wio path/to/image.jpg --size 100 --width 800
 ```
 
 #### ディレクトリ内の全画像を200KB以下、最大幅1024px・最大高さ768px、品質70で再帰的に圧縮
 
 ```sh
-uv run wio reduce --path path/to/dir --size 200 --width 1024 --height 768 --quality 70 -r
+wio path/to/dir --size 200 --width 1024 --height 768 --quality 70 -r
 ```
 
 #### バックアップを作成せずに並列処理
 
 ```sh
-uv run wio reduce --path path/to/dir --size 150 --nobackup --parallel -r
+wio path/to/dir --size 150 --nobackup --parallel -r
 ```
 
-#### 画像をWebP形式で100KB以下に変換
+#### WebP変換せずにJPEG/PNGのまま圧縮
 
 ```sh
-uv run wio reduce --path path/to/image.png --size 100 --webp
+wio path/to/image.png --size 100 --no-webp
 ```
 
 ## バックアップ仕様
@@ -82,13 +99,7 @@ uv run wio reduce --path path/to/image.png --size 100 --webp
 ## ヘルプ表示
 
 ```sh
-uv run wio
-```
-
-または
-
-```sh
-uv run wio reduce --help
+wio --help
 ```
 
 ## ライセンス
