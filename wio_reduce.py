@@ -173,8 +173,12 @@ def process_image(file, args):
     if getattr(args, 'webp', False):
         webp_path = file.with_suffix('.webp')
         quality = args.quality if hasattr(args, 'quality') else 85
+        orig_img.close()
         img.save(webp_path, format='WEBP', quality=quality, optimize=True)
         new_size = webp_path.stat().st_size / 1024
+        # 元ファイルを削除（WebPに変換済みのため）
+        if file.suffix.lower() != '.webp' and file.exists():
+            file.unlink()
         return {
             'size': new_size,
             'quality': quality,
