@@ -13,9 +13,9 @@ def main():
     reduce_parser.add_argument(
         "path", help="Target file or directory path.")
     reduce_parser.add_argument(
-        "--size", type=int, help="Target file size in KB.")
+        "--size", type=int, default=100, help="Target file size in KB (default: 100).")
     reduce_parser.add_argument(
-        "--width", type=int, help="Max width of output image (px).")
+        "--width", type=int, default=1200, help="Max width of output image (px, default: 1200).")
     reduce_parser.add_argument(
         "--height", type=int, help="Max height of output image (px).")
     reduce_parser.add_argument(

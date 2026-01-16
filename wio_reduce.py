@@ -11,8 +11,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
 def collect_image_files(path: str, recursive: bool) -> List[Path]:
-    # 指定パスからJPEG/PNG画像ファイルを収集する（再帰対応）
-    exts = {'.jpg', '.jpeg', '.png'}
+    # 指定パスからJPEG/PNG/WebP画像ファイルを収集する（再帰対応）
+    exts = {'.jpg', '.jpeg', '.png', '.webp'}
     p = Path(path)
     files = []
     if p.is_file() and p.suffix.lower() in exts:
@@ -179,6 +179,39 @@ def process_image(file, args):
             print(msg)
         return {
             'size': new_size,
+            'resize': (orig_w, orig_h, img.width, img.height)
+        }
+    # WebP処理
+    elif ext == '.webp':
+        quality = args.quality
+        min_quality = 10
+        step = 5
+        target_bytes = args.size * 1024
+        out_bytes = None
+        used_quality = quality
+        from io import BytesIO
+        # 目標サイズに近づくまでqualityを下げて保存
+        while quality >= min_quality:
+            buf = BytesIO()
+            img.save(buf, format='WEBP', quality=quality, optimize=True)
+            out_bytes = buf.getvalue()
+            if len(out_bytes) <= target_bytes:
+                used_quality = quality
+                break
+            quality -= step
+        # 最終保存
+        with open(file, 'wb') as f:
+            f.write(out_bytes)
+        new_size = file.stat().st_size / 1024
+        msg = (
+            f"[OK] {file} → {new_size:.1f}KB "
+            f"(quality={used_quality}, resize={orig_w}x{orig_h}→{img.width}x{img.height})"
+        )
+        with print_lock:
+            print(msg)
+        return {
+            'size': new_size,
+            'quality': used_quality,
             'resize': (orig_w, orig_h, img.width, img.height)
         }
     else:

@@ -20,7 +20,7 @@
 1. 依存パッケージのインストール
 
    ```sh
-   poetry install --no-root
+   uv sync
    ```
 
 2. 必要に応じて `pngquant` をインストール（PNG圧縮強化用）
@@ -33,7 +33,7 @@
 ### 基本コマンド
 
 ```sh
-poetry run wio reduce --path <ファイルまたはディレクトリ> --size <目標KB>
+uv run wio reduce --path <ファイルまたはディレクトリ> --size <目標KB>
 ```
 
 ### 主なオプション
@@ -53,25 +53,25 @@ poetry run wio reduce --path <ファイルまたはディレクトリ> --size <�
 #### 画像1枚を100KB以下、幅800pxにリサイズ
 
 ```sh
-poetry run wio reduce --path path/to/image.jpg --size 100 --width 800
+uv run wio reduce --path path/to/image.jpg --size 100 --width 800
 ```
 
 #### ディレクトリ内の全画像を200KB以下、最大幅1024px・最大高さ768px、品質70で再帰的に圧縮
 
 ```sh
-poetry run wio reduce --path path/to/dir --size 200 --width 1024 --height 768 --quality 70 -r
+uv run wio reduce --path path/to/dir --size 200 --width 1024 --height 768 --quality 70 -r
 ```
 
 #### バックアップを作成せずに並列処理
 
 ```sh
-poetry run wio reduce --path path/to/dir --size 150 --nobackup --parallel -r
+uv run wio reduce --path path/to/dir --size 150 --nobackup --parallel -r
 ```
 
 #### 画像をWebP形式で100KB以下に変換
 
 ```sh
-poetry run wio reduce --path path/to/image.png --size 100 --webp
+uv run wio reduce --path path/to/image.png --size 100 --webp
 ```
 
 ## バックアップ仕様
@@ -82,13 +82,13 @@ poetry run wio reduce --path path/to/image.png --size 100 --webp
 ## ヘルプ表示
 
 ```sh
-poetry run wio
+uv run wio
 ```
 
 または
 
 ```sh
-poetry run wio reduce --help
+uv run wio reduce --help
 ```
 
 ## ライセンス

@@ -1,18 +1,20 @@
-[tool.poetry]
+[project]
 name = "web-image-optimizer"
 version = "0.1.0"
-description = "CLI tool for reducing image size (JPEG/PNG) with resizing, compression, and parallel processing."
-authors = ["Your Name <you@example.com>"]
-packages = [{include = "*.py"}]
+description = "CLI tool for reducing image size (JPEG/PNG/WebP) with resizing, compression, and parallel processing."
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "pillow",
+    "tqdm",
+]
 
-[tool.poetry.dependencies]
-python = ">=3.8,<4.0"
-Pillow = "*"
-tqdm = "*"
-
-[tool.poetry.scripts]
+[project.scripts]
 wio = "wio:main"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api" 
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
